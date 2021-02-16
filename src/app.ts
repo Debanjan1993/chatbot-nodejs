@@ -12,12 +12,48 @@ app.get('/', (req, res) => {
 });
 
 app.post('/addPerson', async(req,res)=>{
-    const isSuccess = await saveToDb(req.body);
+    const obj = req.body.queryResult.parameters;
+    const isSuccess = await saveToDb(obj);
     if(isSuccess){
-        res.json({message: 'Record saved successfully'}).status(201);
+        res.send({
+          "fulfillmentMessages": [
+            {
+              "text": {
+                "text": [
+                  "Thank you for leaving your information debanjan will really appreciate it"
+                ]
+              }
+            }
+          ]
+        })
     }else{
-        res.json({message : 'Unable to save record'}).status(400);
+      res.send({
+        "fulfillmentMessages": [
+          {
+            "text": {
+              "text": [
+                "Unable to send your details to debanjan"
+              ]
+            }
+          }
+        ]
+      })
     }
+})
+
+app.post('/test', async(req,res)=>{
+    console.log(req.body.queryResult.parameters);
+    res.send({
+        "fulfillmentMessages": [
+          {
+            "text": {
+              "text": [
+                "Thank you for leaving your information debanjan will really appreciate it"
+              ]
+            }
+          }
+        ]
+      })
 })
 
 

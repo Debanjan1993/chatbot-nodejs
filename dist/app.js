@@ -22,12 +22,47 @@ app.get('/', (req, res) => {
     res.send('hello');
 });
 app.post('/addPerson', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const isSuccess = yield dbOperations_1.default(req.body);
+    const obj = req.body.queryResult.parameters;
+    const isSuccess = yield dbOperations_1.default(obj);
     if (isSuccess) {
-        res.json({ message: 'Record saved successfully' }).status(201);
+        res.send({
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        "text": [
+                            "Thank you for leaving your information debanjan will really appreciate it"
+                        ]
+                    }
+                }
+            ]
+        });
     }
     else {
-        res.json({ message: 'Unable to save record' }).status(400);
+        res.send({
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        "text": [
+                            "Unable to send your details to debanjan"
+                        ]
+                    }
+                }
+            ]
+        });
     }
+}));
+app.post('/test', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body.queryResult.parameters);
+    res.send({
+        "fulfillmentMessages": [
+            {
+                "text": {
+                    "text": [
+                        "Thank you for leaving your information debanjan will really appreciate it"
+                    ]
+                }
+            }
+        ]
+    });
 }));
 app.listen(PORT, () => console.log(`Running code on port ${PORT}`));
