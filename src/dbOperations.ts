@@ -14,7 +14,6 @@ const db = mongoose.connection;
 const saveToDb = async (personObj: any): Promise<Boolean> => {
     personModel.create(personObj).then(person => {
         console.log(`Person ${person.name} Information is added`);
-        db.close();
     }).catch(err => {
         console.error(err);
         return false;

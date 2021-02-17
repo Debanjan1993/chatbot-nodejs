@@ -24,7 +24,6 @@ const db = mongoose_1.default.connection;
 const saveToDb = (personObj) => __awaiter(void 0, void 0, void 0, function* () {
     schema_1.default.create(personObj).then(person => {
         console.log(`Person ${person.name} Information is added`);
-        db.close();
     }).catch(err => {
         console.error(err);
         return false;

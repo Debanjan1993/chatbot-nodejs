@@ -15,13 +15,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dbOperations_1 = __importDefault(require("./dbOperations"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const config_1 = __importDefault(require("config"));
 const app = express_1.default();
 const PORT = process.env.PORT || 5600;
+const username = config_1.default.get('username');
+const pass = config_1.default.get('password');
+function auth(req, res, next) {
+    const b64auth = req.headers.authorization ? req.headers.authorization.split(' ')[1] : '';
+    const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
+    if (login && password && login === username && password === pass) {
+        return next();
+    }
+    else {
+        console.log('Authentication failed');
+        res.status(401).send('Authentication failed');
+    }
+}
 app.use(body_parser_1.default.json());
 app.get('/', (req, res) => {
     res.send('hello');
 });
-app.post('/addPerson', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post('/addPerson', auth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const obj = req.body.queryResult.parameters;
     const isSuccess = yield dbOperations_1.default(obj);
     if (isSuccess) {
